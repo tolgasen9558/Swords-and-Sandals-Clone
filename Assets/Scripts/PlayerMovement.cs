@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
     private float stepSize = 0.75f;
 
@@ -25,4 +25,4 @@ public class PlayerController : MonoBehaviour
             transform.Translate(Vector2.right * stepSize);
         }
     }
-}
+}           
