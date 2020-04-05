@@ -2,19 +2,27 @@
 
 public class PlayerAttack : MonoBehaviour
 {
-
-    private enum AttackType
+    public enum AttackType
     {
-        Quick, Normal, Power
+        Quick, Normal, Power, None
     };
+
+    [SerializeField]
+    private SwordAttack sword;
 
     private Animator animator;
     private bool isAttacking;
+    private float powerAttackHitChance = 0.33f;
+    private float normalAttackHitChance = 0.50f;
+    private float quickAttackHitChance = 0.66f;
+
+    private int baseDamage = 10;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
         isAttacking = false;
+        sword.SetDamage(baseDamage);
     }
 
     void Update()
@@ -43,23 +51,29 @@ public class PlayerAttack : MonoBehaviour
         if(isAttacking) return;
 
         isAttacking = true;
-        string triggerSuffix = "";
+
         switch(attackType)
         {
             case AttackType.Quick:
-                triggerSuffix = "quick";
+                sword.SetHitChance(quickAttackHitChance);
+                animator.SetTrigger("trigger_attack_quick");
                 break;
             case AttackType.Normal:
-                triggerSuffix = "normal";
+                sword.SetHitChance(normalAttackHitChance);
+                animator.SetTrigger("trigger_attack_normal");
                 break;
             case AttackType.Power:
-                triggerSuffix = "power";
+                sword.SetHitChance(powerAttackHitChance);
+                animator.SetTrigger("trigger_attack_power");
+                break;
+            case AttackType.None:
+                Debug.LogError("Attack type not set before attacking!");
                 break;
             default:
                 Debug.LogError("Unknown attack type!");
                 break;
         }
-        animator.SetTrigger("trigger_attack_" + triggerSuffix);
+        
     }
 
     private void OnAttackAnimationFinish()
