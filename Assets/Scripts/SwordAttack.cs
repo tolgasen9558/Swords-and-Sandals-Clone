@@ -2,11 +2,14 @@
 
 public class SwordAttack : MonoBehaviour
 {
-    private float damage;
+    [SerializeField]
+    private bool alwaysHit = false;
+
+    private int damage;
     private float hitChance;
 
 
-    public void SetDamage(float damage)
+    public void SetDamage(int damage)
     {
         this.damage = damage;
     }
@@ -28,7 +31,7 @@ public class SwordAttack : MonoBehaviour
         var enemyHealth = col.gameObject.GetComponent<Health>();
         if(enemyHealth)
         {
-            if(Random.Range(0.0f, 1.0f) <= hitChance)
+            if(alwaysHit || Random.Range(0.0f, 1.0f) <= hitChance)
             {
                 enemyHealth.TakeDamage(damage);
             }

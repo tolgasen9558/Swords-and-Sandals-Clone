@@ -16,13 +16,19 @@ public class PlayerAttack : MonoBehaviour
     private float normalAttackHitChance = 0.50f;
     private float quickAttackHitChance = 0.66f;
 
+    private float powerAttackDamageMultiplier = 1.5f;
+    private float normalAttackDamageMultiplier = 1.0f;
+    private float quickAttackDamageMultiplier = 0.75f;
+
+    private float maxRandomizationMultiplier = 1.2f;
+    private float minRandomizationMultiplier = 0.8f;
+
     private int baseDamage = 10;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
         isAttacking = false;
-        sword.SetDamage(baseDamage);
     }
 
     void Update()
@@ -52,17 +58,26 @@ public class PlayerAttack : MonoBehaviour
 
         isAttacking = true;
 
+        float damageRandomizationFactor = Random.Range(
+            minRandomizationMultiplier, maxRandomizationMultiplier);
+
         switch(attackType)
         {
             case AttackType.Quick:
+                sword.SetDamage((int) Mathf.Round(baseDamage
+                    * quickAttackDamageMultiplier * damageRandomizationFactor));
                 sword.SetHitChance(quickAttackHitChance);
                 animator.SetTrigger("trigger_attack_quick");
                 break;
             case AttackType.Normal:
+                sword.SetDamage((int) Mathf.Round(baseDamage
+                    * normalAttackDamageMultiplier * damageRandomizationFactor));
                 sword.SetHitChance(normalAttackHitChance);
                 animator.SetTrigger("trigger_attack_normal");
                 break;
             case AttackType.Power:
+                sword.SetDamage((int) Mathf.Round(baseDamage
+                    * powerAttackDamageMultiplier * damageRandomizationFactor));
                 sword.SetHitChance(powerAttackHitChance);
                 animator.SetTrigger("trigger_attack_power");
                 break;
@@ -73,7 +88,6 @@ public class PlayerAttack : MonoBehaviour
                 Debug.LogError("Unknown attack type!");
                 break;
         }
-        
     }
 
     private void OnAttackAnimationFinish()
